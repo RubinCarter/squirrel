@@ -8,6 +8,6 @@ public interface ImmutableTimedState<T extends StateMachine<T, S, E, C>, S, E, C
     
     E getAutoFireEvent();
     
-    C getAutoFireContext();
+    ContextCallBack<C> getContextCallBack();
 
 }

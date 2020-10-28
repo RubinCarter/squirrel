@@ -6,11 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.squirrelframework.foundation.component.SquirrelConfiguration;
-import org.squirrelframework.foundation.fsm.Action;
-import org.squirrelframework.foundation.fsm.AnonymousAction;
-import org.squirrelframework.foundation.fsm.ImmutableTimedState;
-import org.squirrelframework.foundation.fsm.MutableTimedState;
-import org.squirrelframework.foundation.fsm.StateMachine;
+import org.squirrelframework.foundation.fsm.*;
 
 import com.google.common.collect.Maps;
 
@@ -23,7 +19,7 @@ public class TimedStateImpl<T extends StateMachine<T, S, E, C>, S, E, C> extends
     
     private E autoFireEvent;
     
-    private C autoFireContext;
+    private ContextCallBack<C> contextCallBack;
     
     private final ScheduledExecutorService scheduler = SquirrelConfiguration.getScheduler();
     
@@ -36,6 +32,7 @@ public class TimedStateImpl<T extends StateMachine<T, S, E, C>, S, E, C> extends
             final Runnable scheduledTask = new Runnable() {
                 @Override
                 public void run() {
+                    C autoFireContext = contextCallBack != null ? contextCallBack.getContext(context) : null;
                     stateMachine.fire(autoFireEvent, autoFireContext);
                 }
             };
@@ -114,13 +111,13 @@ public class TimedStateImpl<T extends StateMachine<T, S, E, C>, S, E, C> extends
     }
 
     @Override
-    public void setAutoFireContext(C context) {
-        this.autoFireContext = context;
+    public void setContextCallBack(ContextCallBack<C> contextCallBack) {
+        this.contextCallBack = contextCallBack;
     }
 
     @Override
-    public C getAutoFireContext() {
-        return autoFireContext;
+    public ContextCallBack<C> getContextCallBack() {
+        return contextCallBack;
     }
 
 }

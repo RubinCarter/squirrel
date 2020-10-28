@@ -1,11 +1,7 @@
 package org.squirrelframework.foundation.fsm.snake;
 
-import org.squirrelframework.foundation.fsm.StateMachine;
+import org.squirrelframework.foundation.fsm.*;
 import org.squirrelframework.foundation.fsm.StateMachine.TransitionCompleteEvent;
-import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
-import org.squirrelframework.foundation.fsm.StateMachineConfiguration;
-import org.squirrelframework.foundation.fsm.UntypedStateMachine;
-import org.squirrelframework.foundation.fsm.UntypedStateMachineBuilder;
 import org.squirrelframework.foundation.fsm.snake.SnakeController.SnakeEvent;
 import org.squirrelframework.foundation.fsm.snake.SnakeController.SnakeState;
 
@@ -15,10 +11,30 @@ public class Main {
         final SnakeModel gameModel = new SnakeModel();
         UntypedStateMachineBuilder builder = StateMachineBuilderFactory.create(SnakeController.class);
         // define timed state
-        builder.defineTimedState(SnakeState.UP, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, gameModel);
-        builder.defineTimedState(SnakeState.DOWN, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, gameModel);
-        builder.defineTimedState(SnakeState.RIGHT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, gameModel);
-        builder.defineTimedState(SnakeState.LEFT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, gameModel);
+        builder.defineTimedState(SnakeState.UP, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+            @Override
+            public Object getContext(Object context) {
+                return gameModel;
+            }
+        });
+        builder.defineTimedState(SnakeState.DOWN, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+            @Override
+            public Object getContext(Object context) {
+                return gameModel;
+            }
+        });
+        builder.defineTimedState(SnakeState.RIGHT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+            @Override
+            public Object getContext(Object context) {
+                return gameModel;
+            }
+        });
+        builder.defineTimedState(SnakeState.LEFT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+            @Override
+            public Object getContext(Object context) {
+                return gameModel;
+            }
+        });
         
         SnakeController controller = builder.newUntypedStateMachine(SnakeState.NEW);
         final SnakeGame game = new SnakeGame(controller, gameModel);
