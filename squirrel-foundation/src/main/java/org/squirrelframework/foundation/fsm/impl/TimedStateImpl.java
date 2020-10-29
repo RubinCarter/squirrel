@@ -19,7 +19,7 @@ public class TimedStateImpl<T extends StateMachine<T, S, E, C>, S, E, C> extends
     
     private E autoFireEvent;
     
-    private ContextCallBack<C> contextCallBack;
+    private ContextCall<C> contextCall;
     
     private final ScheduledExecutorService scheduler = SquirrelConfiguration.getScheduler();
     
@@ -32,8 +32,7 @@ public class TimedStateImpl<T extends StateMachine<T, S, E, C>, S, E, C> extends
             final Runnable scheduledTask = new Runnable() {
                 @Override
                 public void run() {
-                    C autoFireContext = contextCallBack != null ? contextCallBack.getContext(context) : null;
-                    stateMachine.fire(autoFireEvent, autoFireContext);
+                    stateMachine.fire(autoFireEvent, contextCall.getContext(context));
                 }
             };
             final Future<?> future = (timeInterval<=0) ? 
@@ -111,13 +110,13 @@ public class TimedStateImpl<T extends StateMachine<T, S, E, C>, S, E, C> extends
     }
 
     @Override
-    public void setContextCallBack(ContextCallBack<C> contextCallBack) {
-        this.contextCallBack = contextCallBack;
+    public void setContextCall(ContextCall<C> contextCall) {
+        this.contextCall = contextCall;
     }
 
     @Override
-    public ContextCallBack<C> getContextCallBack() {
-        return contextCallBack;
+    public ContextCall<C> getContextCall() {
+        return contextCall;
     }
 
 }

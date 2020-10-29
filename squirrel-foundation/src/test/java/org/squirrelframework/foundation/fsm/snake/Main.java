@@ -11,25 +11,25 @@ public class Main {
         final SnakeModel gameModel = new SnakeModel();
         UntypedStateMachineBuilder builder = StateMachineBuilderFactory.create(SnakeController.class);
         // define timed state
-        builder.defineTimedState(SnakeState.UP, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+        builder.defineTimedState(SnakeState.UP, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new AnonymousContextCall<Object>() {
             @Override
             public Object getContext(Object context) {
                 return gameModel;
             }
         });
-        builder.defineTimedState(SnakeState.DOWN, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+        builder.defineTimedState(SnakeState.DOWN, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new AnonymousContextCall<Object>() {
             @Override
             public Object getContext(Object context) {
                 return gameModel;
             }
         });
-        builder.defineTimedState(SnakeState.RIGHT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+        builder.defineTimedState(SnakeState.RIGHT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new AnonymousContextCall<Object>() {
             @Override
             public Object getContext(Object context) {
                 return gameModel;
             }
         });
-        builder.defineTimedState(SnakeState.LEFT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new ContextCallBack<Object>() {
+        builder.defineTimedState(SnakeState.LEFT, 0, GameConfigure.FRAME_TIME, SnakeEvent.MOVE_AHEAD, new AnonymousContextCall<Object>() {
             @Override
             public Object getContext(Object context) {
                 return gameModel;

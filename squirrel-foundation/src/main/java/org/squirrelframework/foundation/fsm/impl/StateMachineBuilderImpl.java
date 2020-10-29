@@ -801,12 +801,12 @@ public class StateMachineBuilderImpl<T extends StateMachine<T, S, E, C>, S, E, C
     
     @Override
     public MutableState<T, S, E, C> defineTimedState(S stateId,
-            long initialDelay, long timeInterval, E autoEvent, ContextCallBack<C> contextCallBack) {
+            long initialDelay, long timeInterval, E autoEvent, ContextCall<C> contextCall) {
         checkState();
         MutableState<T, S, E, C> state = states.get(stateId);
         if(state==null) {
             MutableTimedState<T, S, E, C> timedState = FSM.newTimedState(stateId);
-            timedState.setContextCallBack(contextCallBack);
+            timedState.setContextCall(contextCall != null ? contextCall : ContextCalls.originals());
             timedState.setAutoFireEvent(autoEvent);
             timedState.setInitialDelay(initialDelay);
             timedState.setTimeInterval(timeInterval);

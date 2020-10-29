@@ -8,5 +8,5 @@ public interface MutableTimedState<T extends StateMachine<T, S, E, C>, S, E, C> 
     
     void setAutoFireEvent(E event);
     
-    void setContextCallBack(ContextCallBack<C> contextCallBack);
+    void setContextCall(ContextCall<C> contextCall);
 }

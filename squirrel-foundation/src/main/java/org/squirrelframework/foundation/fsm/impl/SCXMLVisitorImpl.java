@@ -39,7 +39,7 @@ class SCXMLVisitorImpl extends AbstractVisitor implements SCXMLVisitor {
             writeLine("<parallel id= " + quoteEnumName(visitable) + ">");
         } else if(visitable.isFinalState()) {
             writeLine("<final id= " + quoteEnumName(visitable) + ">");
-        } else { 
+        } else {
             StringBuilder builder = new StringBuilder("<state id= ");
             builder.append(quoteEnumName(visitable));
             if(visitable.getInitialState()!=null) {
@@ -47,6 +47,13 @@ class SCXMLVisitorImpl extends AbstractVisitor implements SCXMLVisitor {
             }
             builder.append(">");
             writeLine(builder.toString());
+        }
+        if(visitable instanceof ImmutableTimedState) {
+            writeLine("<sqrl:auto-fire " + " auto-fire-event= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) visitable).getAutoFireEvent()) +
+                    " initial-delay= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) visitable).getInitialDelay())) +
+                    " time-interval= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) visitable).getTimeInterval())) +
+                    " context-call= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) visitable).getContextCall()) +
+                    "/>");
         }
         if(!visitable.getEntryActions().isEmpty()) {
             writeLine("<onentry>");
