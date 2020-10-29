@@ -415,6 +415,7 @@ class StateImpl<T extends StateMachine<T, S, E, C>, S, E, C> implements MutableS
         }
 
         List<ImmutableTransition<T, S, E, C>> transitions = getTransitions(stateContext.getEvent());
+        currentTransitionResult.setIllegal(transitions.isEmpty());
         for(final ImmutableTransition<T, S, E, C> transition : transitions) {
             transition.internalFire(stateContext);
             if(currentTransitionResult.isAccepted()) {

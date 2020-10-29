@@ -12,6 +12,8 @@ class TransitionResultImpl<T extends StateMachine<T, S, E, C>, S, E, C> implemen
 
     private  boolean accepted;
 
+    private boolean illegal;
+
     private ImmutableState<T, S, E, C> targetState;
 
     private TransitionResult<T, S, E, C> parent;
@@ -78,6 +80,12 @@ class TransitionResultImpl<T extends StateMachine<T, S, E, C>, S, E, C> implemen
     }
 
     @Override
+    public TransitionResult<T, S, E, C> setIllegal(boolean illegal) {
+        this.illegal = illegal;
+        return this;
+    }
+
+    @Override
     public TransitionResult<T, S, E, C> setTargetState(ImmutableState<T, S, E, C> targetState) {
         this.targetState = targetState;
         return this;
@@ -96,4 +104,10 @@ class TransitionResultImpl<T extends StateMachine<T, S, E, C>, S, E, C> implemen
     public boolean isDeclined() {
         return !isAccepted();
     }
+
+    @Override
+    public boolean isIllegal() {
+        return this.illegal;
+    }
+
 }

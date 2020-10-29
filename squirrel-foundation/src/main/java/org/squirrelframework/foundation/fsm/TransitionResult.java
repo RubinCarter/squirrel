@@ -27,12 +27,21 @@ public interface TransitionResult<T extends StateMachine<T, S, E, C>, S, E, C> {
      */
     boolean isDeclined();
 
+    boolean isIllegal();
+
     /**
      * Set transition accepted or not.
      * @param accepted
      * @return transition result
      */
     TransitionResult<T, S, E, C> setAccepted(boolean accepted);
+
+    /**
+     * Set transition illegal or not.
+     * @param illegal
+     * @return transition result
+     */
+    TransitionResult<T, S, E, C> setIllegal(boolean illegal);
 
     /**
      * @return target state of transition

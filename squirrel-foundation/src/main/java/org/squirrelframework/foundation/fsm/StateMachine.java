@@ -291,11 +291,22 @@ public interface StateMachine<T extends StateMachine<T, S, E, C>, S, E, C> exten
     void addTransitionExceptionListener(TransitionExceptionListener<T, S, E, C> listener);
     void removeTransitionExceptionListener(TransitionExceptionListener<T, S, E, C> listener);
     
+    interface TransitionIllegalListener<T extends StateMachine<T, S, E, C>, S, E, C> {
+        public static final String METHOD_NAME = "transitionIllegal";
+        public static final Method METHOD = ReflectUtils.getMethod(
+                TransitionIllegalListener.class, METHOD_NAME, new Class<?>[]{TransitionIllegalEvent.class});
+
+        void transitionIllegal(TransitionIllegalEvent<T, S, E, C> event);
+    }
+    interface TransitionIllegalEvent<T extends StateMachine<T, S, E, C>, S, E, C> extends TransitionEvent<T, S, E, C> {}
+    void addTransitionIllegalListener(TransitionIllegalListener<T, S, E, C> listener);
+    void removeTransitionIllegalListener(TransitionIllegalListener<T, S, E, C> listener);
+
     interface TransitionDeclinedListener<T extends StateMachine<T, S, E, C>, S, E, C> {
         public static final String METHOD_NAME = "transitionDeclined";
         public static final Method METHOD = ReflectUtils.getMethod(
                 TransitionDeclinedListener.class, METHOD_NAME, new Class<?>[]{TransitionDeclinedEvent.class});
-        
+
         void transitionDeclined(TransitionDeclinedEvent<T, S, E, C> event);
     }
     interface TransitionDeclinedEvent<T extends StateMachine<T, S, E, C>, S, E, C> extends TransitionEvent<T, S, E, C> {}

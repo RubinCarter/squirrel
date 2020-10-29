@@ -143,10 +143,10 @@ public class UntypedStateMachineTest {
         });
         // StateMachineStart, TransitionBegin, TransitionComplete, TransitionEnd
         fsm.fire(TestEvent.toB, 1);
-        // TransitionBegin, TransitionDeclined, TransitionEnd
+        // TransitionBegin, TransitionIllegal,TransitionDeclined, TransitionEnd
         fsm.fire(TestEvent.toB, 1);
-        assertTrue(smCallTimes.get()==7);
-        assertTrue( tCallTimes.get()==6);
+        assertTrue(smCallTimes.get()==8);
+        assertTrue( tCallTimes.get()==7);
         assertTrue(teCallTimes.get()==2);
         assertTrue(tbCallTimes.get()==2);
         assertTrue(tcCallTimes.get()==1);

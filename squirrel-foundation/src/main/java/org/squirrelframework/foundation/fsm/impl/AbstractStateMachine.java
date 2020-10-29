@@ -173,6 +173,10 @@ public abstract class AbstractStateMachine<T extends StateMachine<T, S, E, C>, S
                 afterTransitionCompleted(fromStateId, getCurrentState(), event, context);
                 return true;
             } else {
+                if(result.isIllegal()) {
+                    fireEvent(new TransitionIllegalEventImpl<T, S, E, C>(fromStateId, event, context, getThis()));
+                    afterTransitionIllegal(fromStateId, event, context);
+                }
                 fireEvent(new TransitionDeclinedEventImpl<T, S, E, C>(fromStateId, event, context, getThis()));
                 afterTransitionDeclined(fromStateId, event, context);
             }
@@ -395,6 +399,10 @@ public abstract class AbstractStateMachine<T extends StateMachine<T, S, E, C>, S
     }
     
     protected void afterTransitionEnd(S fromState, S toState, E event, C context) {
+    }
+
+    protected void afterTransitionIllegal(S fromState, E event, C context) {
+
     }
     
     protected void afterTransitionDeclined(S fromState, E event, C context) {
@@ -1215,6 +1223,15 @@ public abstract class AbstractStateMachine<T extends StateMachine<T, S, E, C>, S
     public void removeTransitionExceptionListener(TransitionExceptionListener<T, S, E, C> listener) {
         removeListener(TransitionExceptionEvent.class, listener, TransitionExceptionListener.METHOD);
     }
+
+    @Override
+    public void addTransitionIllegalListener(TransitionIllegalListener<T, S, E, C> listener) {
+        addListener(TransitionIllegalEvent.class, listener, TransitionIllegalListener.METHOD);
+    }
+    @Override
+    public void removeTransitionIllegalListener(TransitionIllegalListener<T, S, E, C> listener){
+        removeListener(TransitionIllegalEvent.class, listener, TransitionIllegalListener.METHOD);
+    }
     
     @Override
     public void addTransitionDeclinedListener(TransitionDeclinedListener<T, S, E, C> listener) {
@@ -1368,6 +1385,14 @@ public abstract class AbstractStateMachine<T extends StateMachine<T, S, E, C>, S
         @Override
         public TransitionException getException() {
             return e;
+        }
+    }
+
+    public static class TransitionIllegalEventImpl<T extends StateMachine<T, S, E, C>, S, E, C>
+            extends AbstractTransitionEvent<T, S, E, C>
+            implements StateMachine.TransitionIllegalEvent<T, S, E, C> {
+        public TransitionIllegalEventImpl(S sourceState, E event, C context,T stateMachine) {
+            super(sourceState, event, context, stateMachine);
         }
     }
     
