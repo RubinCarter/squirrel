@@ -26,6 +26,17 @@ class SCXMLVisitorImpl extends AbstractVisitor implements SCXMLVisitor {
         writeLine("<scxml initial=" + quoteEnumName(visitable.getInitialState()) + " version=\"1.0\" " +
                 "xmlns=\"http://www.w3.org/2005/07/scxml\" xmlns:sqrl=\"http://squirrelframework.org/squirrel\">");
         writeLine("<sqrl:fsm "+visitable.getDescription()+" />");
+        for(ImmutableState<?, ?, ?, ?> state : visitable.getAllRawStates()) {
+            if(state.getParentState()==null) {
+                if(state instanceof ImmutableTimedState) {
+                    writeLine("<sqrl:auto-fire id=" + quoteEnumName(state) + " auto-fire-event= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) state).getAutoFireEvent()) +
+                            " initial-delay= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) state).getInitialDelay())) +
+                            " time-interval= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) state).getTimeInterval())) +
+                            " context-call= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) state).getContextCall()) +
+                            "/>");
+                }
+            }
+        }
     }
 
     @Override
@@ -47,13 +58,6 @@ class SCXMLVisitorImpl extends AbstractVisitor implements SCXMLVisitor {
             }
             builder.append(">");
             writeLine(builder.toString());
-        }
-        if(visitable instanceof ImmutableTimedState) {
-            writeLine("<sqrl:auto-fire " + " auto-fire-event= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) visitable).getAutoFireEvent()) +
-                    " initial-delay= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) visitable).getInitialDelay())) +
-                    " time-interval= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) visitable).getTimeInterval())) +
-                    " context-call= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) visitable).getContextCall()) +
-                    "/>");
         }
         if(!visitable.getEntryActions().isEmpty()) {
             writeLine("<onentry>");

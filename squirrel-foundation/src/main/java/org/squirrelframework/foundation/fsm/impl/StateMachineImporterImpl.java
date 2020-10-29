@@ -15,18 +15,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang3.StringUtils;
-import org.squirrelframework.foundation.fsm.Action;
-import org.squirrelframework.foundation.fsm.Condition;
-import org.squirrelframework.foundation.fsm.Conditions;
-import org.squirrelframework.foundation.fsm.Converter;
-import org.squirrelframework.foundation.fsm.ConverterProvider;
-import org.squirrelframework.foundation.fsm.HistoryType;
-import org.squirrelframework.foundation.fsm.MutableState;
-import org.squirrelframework.foundation.fsm.StateCompositeType;
-import org.squirrelframework.foundation.fsm.StateMachine;
-import org.squirrelframework.foundation.fsm.StateMachineBuilder;
-import org.squirrelframework.foundation.fsm.StateMachineBuilderFactory;
-import org.squirrelframework.foundation.fsm.StateMachineImporter;
+import org.squirrelframework.foundation.fsm.*;
 import org.squirrelframework.foundation.util.ReflectUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -162,6 +151,32 @@ public class StateMachineImporterImpl<T extends StateMachine<T, S, E, C>, S, E, 
             if(parentState!=null) {
                 hierarchicalStateStore.put(parentState, getCurrentState());
             }
+        } else if(localName.equals("auto-fire") && uri.equals(SQRL_NAMESPACE)) {
+            String stateIdName = attributes.getValue("id");
+            S stateId = stateConverter.convertFromString(stateIdName);
+            String autoFireEventName = attributes.getValue("auto-fire-event");
+            E autoFireEventId = eventConverter.convertFromString(autoFireEventName);
+            String initialDelay = attributes.getValue("initial-delay");
+            long initialDelayNum = 0;
+            try {
+                initialDelayNum = Long.parseLong(initialDelay);
+            } catch (NumberFormatException e) {}
+            String timeInterval = attributes.getValue("time-interval");
+            long timeIntervalNum = 0;
+            try {
+                timeIntervalNum = Long.parseLong(timeInterval);
+            } catch (NumberFormatException e) {}
+
+            String conditionScript = attributes.getValue("context-call");
+            int condPos = conditionScript.indexOf("#");
+            String contextSchema = conditionScript.substring(0, condPos);
+            String contextContent = conditionScript.substring(condPos+1);
+            ContextCall<C> contextCall = null;
+            if(contextSchema.equals("instance")) {
+                // NOTE: user should provider no-args constructor for ContextCall originals
+                contextCall = newInstance(contextContent);
+            }
+            stateMachineBuilder.defineTimedState(stateId, initialDelayNum, timeIntervalNum, autoFireEventId, contextCall);
         } else if(qName.equals("history")) {
             String historyType = attributes.getValue("type");
             if(historyType.equals("deep")) {
