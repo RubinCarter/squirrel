@@ -257,7 +257,7 @@ public class StateMachineImporterImpl<T extends StateMachine<T, S, E, C>, S, E, 
             }
             currentTranstionBuilder=builder;
             getCurrentTranstionBuilder().from(getCurrentState().getStateId()).to(targetStateId).on(event);
-            String conditionScript = StringEscapeUtils.unescapeXml(attributes.getValue("cond"));
+            String conditionScript = attributes.getValue("cond");
             int condPos = conditionScript.indexOf("#");
             String condSchema = conditionScript.substring(0, condPos);
             String condContent = conditionScript.substring(condPos+1);
