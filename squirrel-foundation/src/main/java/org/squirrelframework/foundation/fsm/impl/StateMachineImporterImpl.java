@@ -14,6 +14,7 @@ import java.util.Stack;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.squirrelframework.foundation.fsm.*;
 import org.squirrelframework.foundation.util.ReflectUtils;
@@ -167,10 +168,10 @@ public class StateMachineImporterImpl<T extends StateMachine<T, S, E, C>, S, E, 
                 timeIntervalNum = Long.parseLong(timeInterval);
             } catch (NumberFormatException e) {}
 
-            String conditionScript = attributes.getValue("context-call");
-            int condPos = conditionScript.indexOf("#");
-            String contextSchema = conditionScript.substring(0, condPos);
-            String contextContent = conditionScript.substring(condPos+1);
+            String contextCallScript = attributes.getValue("context-call");
+            int condPos = contextCallScript.indexOf("#");
+            String contextSchema = contextCallScript.substring(0, condPos);
+            String contextContent = contextCallScript.substring(condPos+1);
             ContextCall<C> contextCall = null;
             if(contextSchema.equals("instance")) {
                 // NOTE: user should provider no-args constructor for ContextCall originals
@@ -256,7 +257,7 @@ public class StateMachineImporterImpl<T extends StateMachine<T, S, E, C>, S, E, 
             }
             currentTranstionBuilder=builder;
             getCurrentTranstionBuilder().from(getCurrentState().getStateId()).to(targetStateId).on(event);
-            String conditionScript = attributes.getValue("cond");
+            String conditionScript = StringEscapeUtils.unescapeXml(attributes.getValue("cond"));
             int condPos = conditionScript.indexOf("#");
             String condSchema = conditionScript.substring(0, condPos);
             String condContent = conditionScript.substring(condPos+1);

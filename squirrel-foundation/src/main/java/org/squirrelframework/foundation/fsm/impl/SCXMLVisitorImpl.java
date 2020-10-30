@@ -1,5 +1,6 @@
 package org.squirrelframework.foundation.fsm.impl;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.squirrelframework.foundation.fsm.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -95,10 +96,14 @@ class SCXMLVisitorImpl extends AbstractVisitor implements SCXMLVisitor {
                 + quoteName(Integer.toString(visitable.getPriority())) + " sqrl:type="
                 + quoteName(visitable.getType().toString()) + " target="
                 + quoteEnumName(visitable.getTargetState()) + " cond="
-                + quoteName(visitable.getCondition().toString())+">");
+                + quoteEscapeName(visitable.getCondition().toString())+">");
         for(Action<?, ?, ?, ?> action : visitable.getActions()) {
             writeAction(action);
         }
+    }
+
+    private String quoteEscapeName(final String id) {
+        return "\"" + StringEscapeUtils.escapeXml(id) + "\"";
     }
 
     @Override
