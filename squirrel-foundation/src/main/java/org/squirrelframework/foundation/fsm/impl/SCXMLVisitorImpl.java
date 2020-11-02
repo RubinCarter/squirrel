@@ -30,7 +30,7 @@ class SCXMLVisitorImpl extends AbstractVisitor implements SCXMLVisitor {
         for(ImmutableState<?, ?, ?, ?> state : visitable.getAllRawStates()) {
             if(state.getParentState()==null) {
                 if(state instanceof ImmutableTimedState) {
-                    writeLine("<sqrl:auto-fire id=" + quoteEnumName(state) + " auto-fire-event= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) state).getAutoFireEvent()) +
+                    writeLine("<sqrl:fire id=" + quoteEnumName(state) + " auto-fire-event= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) state).getAutoFireEvent()) +
                             " initial-delay= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) state).getInitialDelay())) +
                             " time-interval= " + quoteName(Long.toString(((ImmutableTimedState<?, ?, ?, ?>) state).getTimeInterval())) +
                             " context-call= " + quoteEnumName(((ImmutableTimedState<?, ?, ?, ?>) state).getContextCall()) +
