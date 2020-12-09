@@ -47,4 +47,7 @@ public interface When<T extends StateMachine<T, S, E, C>, S, E, C> {
      * @param methodName method name
      */
     void callMethod(String methodName);
+
+    void callMethods(String methodName);
+
 }

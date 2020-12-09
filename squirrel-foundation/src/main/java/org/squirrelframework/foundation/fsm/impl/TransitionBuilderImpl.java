@@ -1,5 +1,6 @@
 package org.squirrelframework.foundation.fsm.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.squirrelframework.foundation.component.SquirrelComponent;
 import org.squirrelframework.foundation.fsm.*;
 import org.squirrelframework.foundation.fsm.builder.*;
@@ -53,6 +54,14 @@ class TransitionBuilderImpl<T extends StateMachine<T, S, E, C>, S, E, C> impleme
     public void callMethod(final String methodName) {
         Action<T, S, E, C> action = FSM.newMethodCallActionProxy(methodName, executionContext);
         transition.addAction(action);
+    }
+
+    @Override
+    public void callMethods(String methodName) {
+        String[] methodNames = StringUtils.split(methodName, "$");
+        for (String name : methodNames) {
+            callMethod(name);
+        }
     }
 
     @Override

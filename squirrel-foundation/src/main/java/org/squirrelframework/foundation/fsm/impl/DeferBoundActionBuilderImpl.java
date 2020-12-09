@@ -2,6 +2,7 @@ package org.squirrelframework.foundation.fsm.impl;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.squirrelframework.foundation.component.SquirrelComponent;
 import org.squirrelframework.foundation.fsm.*;
 import org.squirrelframework.foundation.fsm.builder.*;
@@ -71,6 +72,14 @@ public class DeferBoundActionBuilderImpl<T extends StateMachine<T, S, E, C>, S, 
         Action<T, S, E, C> action = FSM.newMethodCallActionProxy(methodName,
                 executionContext);
         perform(action);
+    }
+
+    @Override
+    public void callMethods(String methodName) {
+        String[] methodNames = StringUtils.split(methodName, "$");
+        for (String name : methodNames) {
+            callMethod(name);
+        }
     }
 
     @Override

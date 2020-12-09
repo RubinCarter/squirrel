@@ -191,4 +191,13 @@ class MultiTransitionBuilderImpl<T extends StateMachine<T, S, E, C>, S, E, C> im
             transitions.get(i).addAction(action);
         }
     }
+
+    @Override
+    public void callMethods(String methodName) {
+        String[] methodNames = StringUtils.split(methodName, "$");
+        for (String method : methodNames) {
+            callMethod(method);
+        }
+    }
+
 }
