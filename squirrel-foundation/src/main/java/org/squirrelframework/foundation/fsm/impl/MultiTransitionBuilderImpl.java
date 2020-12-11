@@ -155,31 +155,34 @@ class MultiTransitionBuilderImpl<T extends StateMachine<T, S, E, C>, S, E, C> im
     }
 
     @Override
-    public void perform(Action<T, S, E, C> action) {
+    public When<T, S, E, C> perform(Action<T, S, E, C> action) {
         for(MutableTransition<T, S, E, C> transition : transitions) {
             transition.addAction(action);
         }
+        return this;
     }
 
     @Override
-    public void perform(List<? extends Action<T, S, E, C>> actions) {
+    public When<T, S, E, C> perform(List<? extends Action<T, S, E, C>> actions) {
         int actionSize = actions.size();
         for(int i=0, transitionLength=transitions.size(); i<transitionLength; ++i) {
             int actionPos = i<actionSize ? i : actionSize-1;
             transitions.get(i).addAction(actions.get(actionPos));
         }
+        return this;
     }
 
     @Override
-    public void evalMvel(String expression) {
+    public When<T, S, E, C> evalMvel(String expression) {
         for(MutableTransition<T, S, E, C> transition : transitions) {
             Action<T, S, E, C> action = FSM.newMvelAction(expression, executionContext);
             transition.addAction(action);
         }
+        return this;
     }
 
     @Override
-    public void callMethod(String methodName) {
+    public When<T, S, E, C> callMethod(String methodName) {
         String[] methods = StringUtils.split(methodName, '|');
         int methodsLength = methods.length;
 
@@ -190,14 +193,25 @@ class MultiTransitionBuilderImpl<T extends StateMachine<T, S, E, C>, S, E, C> im
             Action<T, S, E, C> action = FSM.newMethodCallActionProxy(theMethodName, executionContext);
             transitions.get(i).addAction(action);
         }
+        return this;
     }
 
     @Override
-    public void callMethods(String methodName) {
-        String[] methodNames = StringUtils.split(methodName, "$");
-        for (String method : methodNames) {
-            callMethod(method);
+    public When<T, S, E, C> fireEvent(List<E> events) {
+        for (int i = 0; i < transitions.size(); i++) {
+            Action<T, S, E, C> action = FSM.newFireEventAction(events.get(i), executionContext);
+            transitions.get(i).addAction(action);
         }
+        return this;
+    }
+
+    @Override
+    public When<T, S, E, C> fireEvent(E event) {
+        for (MutableTransition<T, S, E, C> transition : transitions) {
+            Action<T, S, E, C> action = FSM.newFireEventAction(event, executionContext);
+            transition.addAction(action);
+        }
+        return this;
     }
 
 }

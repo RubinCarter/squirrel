@@ -21,7 +21,7 @@ public interface When<T extends StateMachine<T, S, E, C>, S, E, C> {
      * Define action to be performed during transition
      * @param action performed action
      */
-    void perform(Action<T, S, E, C> action);
+    When<T, S, E, C> perform(Action<T, S, E, C> action);
     
     /**
      * Define actions to be performed during transition. When used in multiple transition builder,
@@ -30,13 +30,13 @@ public interface When<T extends StateMachine<T, S, E, C>, S, E, C> {
      * actions will be skipped which means no action will be assigned to corresponding transition.
      * @param actions performed actions
      */
-    void perform(List<? extends Action<T, S, E, C>> actions);
+    When<T, S, E, C> perform(List<? extends Action<T, S, E, C>> actions);
     
     /**
      * Define mvel action to be performed during transition
      * @param expression mvel expression
      */
-    void evalMvel(String expression);
+    When<T, S, E, C> evalMvel(String expression);
     
     /**
      * Define action method to be called during transition. When used in multiple transition builder,
@@ -46,8 +46,10 @@ public interface When<T extends StateMachine<T, S, E, C>, S, E, C> {
      * assigned to corresponding transition.
      * @param methodName method name
      */
-    void callMethod(String methodName);
+    When<T, S, E, C> callMethod(String methodName);
 
-    void callMethods(String methodName);
+    When<T, S, E, C> fireEvent(List<E> events);
+
+    When<T, S, E, C> fireEvent(E event);
 
 }

@@ -97,6 +97,14 @@ abstract class FSM {
                 new Class[] { Method.class, int.class, ExecutionContext.class }, 
                 new Object[] { method, weight, executionContext } );
     }
+
+    static <T extends StateMachine<T, S, E, C>, S, E, C> FireEventActionImpl<T, S, E, C> newFireEventAction(E event, ExecutionContext executionContext) {
+        return SquirrelProvider.getInstance().newInstance(
+                new TypeReference<FireEventActionImpl<T, S, E, C>>(){},
+                new Class[] {Object.class, ExecutionContext.class},
+                new Object[] {event, executionContext}
+                );
+    }
     
     static <T extends StateMachine<T, S, E, C>, S, E, C> MethodCallActionProxyImpl<T, S, E, C> newMethodCallActionProxy(
             String methodName, ExecutionContext executionContext) {
