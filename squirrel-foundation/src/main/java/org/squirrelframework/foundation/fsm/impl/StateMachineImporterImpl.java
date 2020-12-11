@@ -216,9 +216,9 @@ public class StateMachineImporterImpl<T extends StateMachine<T, S, E, C>, S, E, 
                 // NOTE: user should provider no-args constructor for action always
                 Action<T, S, E, C> action = newInstance(actionValue);
                 if(isConstructState()) {
-                    if(Boolean.TRUE==isEntryAction) {
+                    if(isEntryAction) {
                         stateMachineBuilder.onEntry(getCurrentState().getStateId()).perform(action);
-                    } else if (Boolean.FALSE==isEntryAction) { 
+                    } else {
                         stateMachineBuilder.onExit(getCurrentState().getStateId()).perform(action);
                     }
                 } else if(isConstructTransition()) {
@@ -226,13 +226,24 @@ public class StateMachineImporterImpl<T extends StateMachine<T, S, E, C>, S, E, 
                 }
             } else if(actionSchema.equals("mvel")) {
                 if(isConstructState()) {
-                    if(Boolean.TRUE==isEntryAction) {
+                    if(isEntryAction) {
                         stateMachineBuilder.onEntry(getCurrentState().getStateId()).evalMvel(actionValue);
-                    } else if (Boolean.FALSE==isEntryAction) { 
+                    } else {
                         stateMachineBuilder.onExit(getCurrentState().getStateId()).evalMvel(actionValue);
                     }
                 } else if(isConstructTransition()) {
                     getCurrentTranstionBuilder().evalMvel(actionValue);
+                }
+            } else if(actionSchema.equals("event")){
+                E event = eventConverter.convertFromString(actionValue);
+                if(isConstructState()) {
+                    if(isEntryAction) {
+                        stateMachineBuilder.onEntry(getCurrentState().getStateId()).fireEvent(event);
+                    } else {
+                        stateMachineBuilder.onExit(getCurrentState().getStateId()).fireEvent(event);
+                    }
+                } else if(isConstructTransition()) {
+                    getCurrentTranstionBuilder().fireEvent(event);
                 }
             }
         } else if(qName.equals("transition")) {
